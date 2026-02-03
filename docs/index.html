@@ -1,265 +1,273 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Npuls Learning Journey – Interactive FAQ</title>
-  <style>
-    :root{
-      --bg:#0b1020;
-      --card:#0f1733;
-      --card2:#0b122b;
-      --fg:#eef2ff;
-      --muted:#b7c0e6;
-      --border:rgba(255,255,255,.12);
-      --shadow:0 14px 38px rgba(0,0,0,.35);
-      --accent:#7c3aed;
-      --accent2:#22c55e;
-      --chip:#111a3a;
-      --chipOn:#7c3aed;
-      --danger:#ef4444;
-      --focus: 0 0 0 3px rgba(124,58,237,.35);
-      --radius:16px;
-    }
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Npuls Learning Journey – Interactive FAQ</title>
+<style>
+  :root{
+    --bg:#ffffff; --fg:#111827; --muted:#6b7280;
+    --accent:#2563eb; --chip:#eef2ff; --border:#e5e7eb;
+    --card:#ffffff; --shadow:0 10px 30px rgba(17,24,39,.08);
+  }
 
-    html,body{
-      height:100%;
-      margin:0;
-      background:
-        radial-gradient(1200px 800px at 20% -10%, rgba(124,58,237,.35), transparent 55%),
-        radial-gradient(900px 600px at 90% 0%, rgba(34,197,94,.22), transparent 55%),
-        radial-gradient(900px 600px at 50% 110%, rgba(59,130,246,.18), transparent 55%),
-        var(--bg);
-      color:var(--fg);
-      font:16px/1.55 system-ui,-apple-system,Segoe UI,Roboto,Inter,Arial,sans-serif;
-    }
+  html,body{
+    margin:0; padding:0;
+    background:var(--bg);
+    color:var(--fg);
+    font:16px/1.55 system-ui,-apple-system,Segoe UI,Roboto,Inter,Arial,sans-serif;
+  }
 
-    a{color:inherit}
-    .wrap{max-width:1100px;margin:0 auto;padding:28px 18px 72px;}
-    header{display:flex;flex-wrap:wrap;gap:14px;align-items:flex-end;justify-content:space-between}
-    .title{display:flex;flex-direction:column;gap:6px}
-    h1{margin:0;font-size:clamp(1.5rem, 2.5vw, 2.25rem);letter-spacing:-.02em}
-    .sub{margin:0;color:var(--muted);max-width:75ch}
+  .wrap{max-width:1100px;margin:0 auto;padding:28px 20px 70px;}
+  h1{font-size:clamp(1.5rem,2.4vw,2.2rem);margin:0 0 6px;letter-spacing:-.02em}
+  .sub{color:var(--muted);margin:0 0 18px;max-width:80ch}
 
-    .panel{
-      margin-top:18px;
-      background:linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.03));
-      border:1px solid var(--border);
-      border-radius:var(--radius);
-      box-shadow:var(--shadow);
-      overflow:hidden;
-    }
+  .panel{
+    background:var(--card);
+    border:1px solid var(--border);
+    border-radius:16px;
+    box-shadow:var(--shadow);
+    overflow:hidden;
+  }
 
-    .sticky{
-      position:sticky;
-      top:0;
-      z-index:5;
-      backdrop-filter: blur(10px);
-      background:linear-gradient(180deg, rgba(11,16,32,.92), rgba(11,16,32,.72));
-      border-bottom:1px solid var(--border);
-    }
+  .sticky{
+    position:sticky;
+    top:0;
+    background:rgba(255,255,255,.92);
+    backdrop-filter: blur(10px);
+    border-bottom:1px solid var(--border);
+    z-index:10;
+  }
 
-    .controls{
-      display:grid;
-      grid-template-columns: 1fr auto;
-      gap:12px;
-      padding:14px;
-    }
+  .controls{
+    display:flex;
+    flex-wrap:wrap;
+    gap:12px;
+    align-items:center;
+    padding:14px 14px 10px;
+  }
 
-    .search{
-      display:flex;
-      gap:10px;
-      align-items:center;
-      background:rgba(255,255,255,.06);
-      border:1px solid var(--border);
-      border-radius:14px;
-      padding:10px 12px;
-    }
-    .search svg{flex:0 0 auto;opacity:.9}
-    .search input{
-      width:100%;
-      background:transparent;
-      border:0;
-      outline:none;
-      color:var(--fg);
-      font-size:16px;
-    }
-    .search input::placeholder{color:rgba(183,192,230,.75)}
+  .search{
+    flex:1 1 320px;
+    display:flex;
+    align-items:center;
+    border:1px solid var(--border);
+    border-radius:12px;
+    padding:10px 12px;
+    gap:8px;
+    background:#fff;
+  }
 
-    .btnRow{
-      display:flex;
-      flex-wrap:wrap;
-      gap:8px;
-      justify-content:flex-end;
-      align-items:center;
-    }
+  .search input{
+    flex:1;
+    border:0;
+    outline:none;
+    background:transparent;
+    font-size:16px;
+    color:var(--fg);
+  }
 
-    button{
-      font:inherit;
-      color:var(--fg);
-      background:rgba(255,255,255,.06);
-      border:1px solid var(--border);
-      border-radius:12px;
-      padding:9px 11px;
-      cursor:pointer;
-      transition: transform .05s ease, background .2s ease, border-color .2s ease;
-      user-select:none;
-    }
-    button:hover{background:rgba(255,255,255,.09);border-color:rgba(255,255,255,.18)}
-    button:active{transform:translateY(1px)}
-    button:focus-visible{outline:none;box-shadow:var(--focus)}
-    .btnPrimary{background:rgba(124,58,237,.22);border-color:rgba(124,58,237,.55)}
-    .btnPrimary:hover{background:rgba(124,58,237,.30)}
-    .btnDanger{background:rgba(239,68,68,.18);border-color:rgba(239,68,68,.5)}
-    .btnDanger:hover{background:rgba(239,68,68,.24)}
-    .pill{
-      display:inline-flex;align-items:center;gap:8px;
-      padding:9px 11px;border-radius:999px;
-      border:1px solid var(--border);background:rgba(255,255,255,.04);
-      color:var(--muted);
-      white-space:nowrap;
-    }
+  .toolbar{
+    display:flex;
+    flex-wrap:wrap;
+    gap:8px;
+    align-items:center;
+  }
 
-    .chips{
-      display:flex;
-      flex-wrap:wrap;
-      gap:8px;
-      padding:12px 14px 14px;
-    }
+  .btn{
+    border:1px solid var(--border);
+    background:#fff;
+    border-radius:10px;
+    padding:8px 10px;
+    cursor:pointer;
+    font-size:14px;
+    color:var(--fg);
+  }
+  .btn:hover{border-color:#cbd5e1}
+  .btn.primary{
+    border-color:rgba(37,99,235,.35);
+    background:rgba(37,99,235,.07);
+  }
 
-    .chip{
-      border-radius:999px;
-      padding:7px 10px;
-      background:var(--chip);
-      border:1px solid rgba(255,255,255,.12);
-      color:var(--muted);
-    }
-    .chip.active{
-      background:rgba(124,58,237,.30);
-      border-color:rgba(124,58,237,.65);
-      color:var(--fg);
-    }
+  .count{
+    color:var(--muted);
+    font-size:14px;
+    margin-left:4px;
+    white-space:nowrap;
+  }
 
-    .body{
-      padding:14px;
-      background:linear-gradient(180deg, rgba(15,23,51,.35), rgba(15,23,51,.12));
-    }
+  .quick{
+    padding:0 14px 12px;
+  }
 
-    .grid{display:grid;gap:12px}
-    details{
-      border:1px solid rgba(255,255,255,.12);
-      border-radius:14px;
-      background:rgba(255,255,255,.04);
-      overflow:hidden;
-    }
-    summary{
-      cursor:pointer;
-      padding:12px 12px;
-      list-style:none;
-      display:flex;
-      align-items:flex-start;
-      justify-content:space-between;
-      gap:12px;
-    }
-    summary::-webkit-details-marker{display:none}
-    .q{
-      font-weight:650;
-      letter-spacing:-.01em;
-    }
+  .quickTitle{
+    color:var(--muted);
+    font-size:13px;
+    margin:0 0 8px;
+  }
 
-    .meta{
-      display:flex;flex-wrap:wrap;gap:8px;align-items:center;justify-content:flex-end;
-    }
-    .tag{
-      font-size:12px;
-      padding:3px 9px;
-      border-radius:999px;
-      background:rgba(124,58,237,.18);
-      border:1px solid rgba(124,58,237,.45);
-      color:var(--fg);
-    }
+  .chips{
+    display:flex;
+    flex-wrap:wrap;
+    gap:8px;
+    margin-top:6px;
+  }
 
-    .content{
-      padding:0 12px 14px;
-      border-top:1px solid rgba(255,255,255,.10);
-    }
-    .answer{
-      margin:12px 0 0;
-      color:rgba(238,242,255,.95);
-    }
-    .label{
-      display:inline-flex;
-      font-size:12px;
-      letter-spacing:.04em;
-      text-transform:uppercase;
-      color:rgba(183,192,230,.9);
-      margin-top:12px;
-      gap:8px;
-      align-items:center;
-    }
-    .mistake{
-      margin:6px 0 0;
-      color:rgba(183,192,230,.92);
-      font-style:italic;
-    }
+  .chip{
+    padding:6px 10px;
+    border-radius:999px;
+    border:1px solid var(--border);
+    background:var(--chip);
+    cursor:pointer;
+    font-size:14px;
+    user-select:none;
+    color:var(--fg);
+  }
+  .chip.active{
+    background:var(--accent);
+    color:#fff;
+    border-color:var(--accent);
+  }
 
-    .empty{
-      padding:18px;
-      border:1px dashed rgba(255,255,255,.16);
-      border-radius:14px;
-      background:rgba(255,255,255,.03);
-      color:var(--muted);
-    }
+  .body{
+    padding:14px;
+  }
 
-    .sr{position:absolute;left:-9999px}
+  .faq{
+    display:grid;
+    grid-template-columns:1fr;
+    gap:12px;
+    margin-top:8px;
+  }
 
-    @media (max-width: 720px){
-      .controls{grid-template-columns:1fr}
-      .btnRow{justify-content:flex-start}
-      summary{flex-direction:column;align-items:flex-start}
-      .meta{justify-content:flex-start}
-    }
-  </style>
+  details{
+    border:1px solid var(--border);
+    border-radius:12px;
+    padding:12px 14px;
+    background:#fff;
+  }
+
+  summary{
+    font-weight:600;
+    cursor:pointer;
+    outline:none;
+    display:flex;
+    justify-content:space-between;
+    align-items:flex-start;
+    gap:12px
+  }
+
+  .summaryRight{
+    display:flex;
+    gap:8px;
+    align-items:center;
+    flex-wrap:wrap;
+    justify-content:flex-end;
+  }
+
+  .tag{
+    font-size:12px;
+    padding:2px 8px;
+    border-radius:999px;
+    background:var(--chip);
+    border:1px solid var(--border);
+    color:#334155;
+    white-space:nowrap;
+  }
+
+  .ans{margin-top:10px}
+  .mist{margin-top:8px;color:#9ca3af;font-style:italic}
+
+  .sr{position:absolute;left:-9999px}
+
+  .empty{
+    color:var(--muted);
+    padding:18px;
+    border:1px dashed var(--border);
+    border-radius:12px;
+    background:#fff;
+  }
+
+  @media (max-width: 720px){
+    .toolbar{width:100%}
+    .count{margin-left:auto}
+  }
+</style>
 </head>
 
 <body>
-  <div class="wrap">
-    <header>
-      <div class="title">
-        <h1>Npuls Learning Journey – Interactive FAQ</h1>
-        <p class="sub">Filter by tag or search by keyword. Use “Show all” to open everything and quickly skim.</p>
-      </div>
-      <div class="pill" id="countPill" aria-live="polite">0 / 0 shown</div>
-    </header>
+<div class="wrap">
+  <h1>Npuls Learning Journey – Interactive FAQ</h1>
+  <p class="sub">Use quick filters, select tags, or search by keyword. Questions stay hidden until you filter or search.</p>
 
-    <section class="panel" aria-label="FAQ panel">
-      <div class="sticky">
-        <div class="controls">
-          <div class="search" role="search">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-              <path d="M10.5 18a7.5 7.5 0 1 1 0-15 7.5 7.5 0 0 1 0 15Z" stroke="currentColor" stroke-width="2" opacity=".9"/>
-              <path d="M16.5 16.5 21 21" stroke="currentColor" stroke-width="2" opacity=".9" stroke-linecap="round"/>
-            </svg>
-            <label class="sr" for="q">Search</label>
-            <input id="q" type="search" placeholder="Search questions, answers, mistakes…" autocomplete="off" />
-          </div>
-
-          <div class="btnRow">
-            <button type="button" class="btnPrimary" id="showAll">Show all</button>
-            <button type="button" id="collapseAll">Collapse all</button>
-            <button type="button" class="btnDanger" id="clear">Clear</button>
-          </div>
+  <div class="panel">
+    <div class="sticky">
+      <div class="controls">
+        <label for="q" class="sr">Search</label>
+        <div class="search">
+          <span aria-hidden="true">🔎</span>
+          <input id="q" type="search" placeholder="Search questions, answers, mistakes…">
         </div>
 
-        <div class="chips" id="chips" aria-label="Tag filters"></div>
+        <div class="toolbar">
+          <button class="btn primary" id="showAll" type="button">Show all</button>
+          <button class="btn" id="collapseAll" type="button">Collapse all</button>
+          <button class="btn" id="clear" type="button">Clear</button>
+          <span class="count" id="count"></span>
+        </div>
       </div>
 
-      <div class="body">
-        <div class="grid" id="faq"></div>
-        <div id="empty" class="empty" style="display:none"></div>
+      <div class="quick">
+        <p class="quickTitle">Quick filters (examples)</p>
+        <div class="chips" id="quickChips"></div>
       </div>
-    </section>
+
+      <div class="quick" style="padding-top:0;">
+        <p class="quickTitle">All tags</p>
+        <div class="chips" id="chips"></div>
+      </div>
+    </div>
+
+    <div class="body">
+      <div class="faq" id="faq"></div>
+      <div id="empty" class="empty" style="display:none;"></div>
+    </div>
   </div>
+</div>
 
-  <script>
-    const DATA = [{"tag": "#Orientation", "q": "I’m not technical—can I still succeed in this course?", "a": "Absolutely. Collaboration matters more than coding. Focus on clear communication and translating ideas between roles.", "m": "Believing only programmers or designers can add value."}, {"tag": "#Orientation", "q": "Why are we using Unity if I’m not becoming a developer?", "a": "Unity lets you turn abstract ideas into interactive prototypes. It’s a shared playground for thinking, not just coding.", "m": "Treating Unity as “extra work” instead of a collaboration tool."}, {"tag": "#Orientation", "q": "What if my team disagrees on direction?", "a": "Translate opinions into user stories and compare them against the challenge goals. Use MoSCoW priorities to decide.", "m": "Taking disagreements personally instead of viewing them as design signals."}, {"tag": "#Orientation", "q": "How polished should our prototype be?", "a": "Focus on functionality—good enough to learn from. You can polish after validation.", "m": "Spending time on visuals before confirming that the idea works."}, {"tag": "#Orientation", "q": "What does “challenge-based” actually mean?", "a": "You start from a real problem, design a response, test it, and reflect. The challenge anchors every step.", "m": "Jumping into solutions without grounding them in a real question."}, {"tag": "#Orientation", "q": "How do I balance my own ideas with my teammates’?", "a": "Treat each idea as a hypothesis to test—let data or prototypes guide which one fits best.", "m": "Arguing to win instead of experimenting to learn."}, {"tag": "#Orientation", "q": "I feel anxious about new tools—what should I do first?", "a": "Start small: open an example scene, change one parameter, and note what happens. Progress is incremental.", "m": "Trying to master everything before experimenting."}, {"tag": "#Orientation", "q": "How much time should I spend on each module?", "a": "Short, focused bursts (1–2 hours) per phase. Timeboxing prevents scope creep.", "m": "Working endlessly without deadlines."}, {"tag": "#Orientation", "q": "What’s the most common reason student projects fail?", "a": "Poor communication about roles, timelines, or “done” criteria.", "m": "Assuming alignment without explicit check-ins."}, {"tag": "#Orientation", "q": "How do I know what my “hat” is—researcher, designer, developer, or manager?", "a": "Try all briefly. Reflection helps you see where you contribute best.", "m": "Locking into one role too early."}, {"tag": "#Research", "q": "How do I turn an idea into a research question?", "a": "Start broad (“VR and learning”), then specify population, condition, and measurable outcome.", "m": "Keeping questions too vague (“Is VR good?”)."}, {"tag": "#Research", "q": "What’s the difference between a question and a hypothesis?", "a": "The question asks what might happen; the hypothesis predicts what will happen and why.", "m": "Writing opinions instead of testable predictions."}, {"tag": "#Research", "q": "How do I identify independent and dependent variables?", "a": "The independent variable (IV) is what you manipulate; the dependent (DV) is what you measure.", "m": "Reversing them or mixing too many."}, {"tag": "#Research", "q": "Why are control variables important?", "a": "They keep conditions fair so only your main factor changes.", "m": "Ignoring controls like time-on-task or material difficulty."}, {"tag": "#Research", "q": "How do I make “learning improvement” measurable?", "a": "Pick observable metrics—test scores, recall, accuracy, or error rate.", "m": "Using undefined concepts (“engagement”) without metrics."}, {"tag": "#Research", "q": "What if my question changes during the project?", "a": "Document the shift and explain why—it’s part of refinement.", "m": "Hiding changes instead of showing your reasoning."}, {"tag": "#Research", "q": "How many variables are too many?", "a": "One IV and one or two DVs usually suffice. Each extra adds noise.", "m": "Over-complicating experiments with unnecessary data."}, {"tag": "#Research", "q": "What if I can’t manipulate the independent variable?", "a": "Use an observational design; describe patterns but avoid causal claims.", "m": "Using “cause” language for correlational results."}, {"tag": "#Research", "q": "What if my data doesn’t support the hypothesis?", "a": "That’s still valuable—it reveals how reality differs from expectation.", "m": "Changing data or re-phrasing hypotheses post-hoc."}, {"tag": "#Research", "q": "How does research feed into the next stages?", "a": "Questions and variables become design goals, user stories, and measurable outcomes later.", "m": "Treating research as isolated from design."}, {"tag": "#Design", "q": "My idea feels vague—how can I make it concrete?", "a": "Write one user story and one measurable outcome. These anchor your design.", "m": "Brainstorming endlessly without defining user behavior."}, {"tag": "#Design", "q": "What makes a design “research-ready”?", "a": "It clearly connects participant actions to measurable data.", "m": "Building something fun but impossible to analyze."}, {"tag": "#Design", "q": "How specific should my design plan be?", "a": "Be specific about what happens and what’s measured, flexible about visuals or tools.", "m": "Over-specifying cosmetic details early."}, {"tag": "#Design", "q": "Where can I find design inspiration?", "a": "Look at VR demos, serious games, or earlier research paradigms. Borrow, adapt, cite.", "m": "Copying ideas without connecting to your hypothesis."}, {"tag": "#Design", "q": "How do I avoid biasing participants?", "a": "Pilot test and adjust instructions. Neutral wording and balanced stimuli matter.", "m": "Leading participants toward expected results."}, {"tag": "#Design", "q": "What if I have few assets or little time?", "a": "Focus on interaction, not looks. Use placeholders and test core logic.", "m": "Spending days on visuals before verifying behavior."}, {"tag": "#Design", "q": "How do I link design choices to measurement?", "a": "For each action, note what data it produces and which hypothesis it supports.", "m": "Forgetting to align game events with logged variables."}, {"tag": "#Design", "q]()
+<script>
+const DATA = [
+  {"tag":"#Orientation","q":"I’m not technical—can I still succeed in this course?","a":"Absolutely. Collaboration matters more than coding. Focus on clear communication and translating ideas between roles.","m":"Believing only programmers or designers can add value."},
+  {"tag":"#Orientation","q":"Why are we using Unity if I’m not becoming a developer?","a":"Unity lets you turn abstract ideas into interactive prototypes. It’s a shared playground for thinking, not just coding.","m":"Treating Unity as “extra work” instead of a collaboration tool."},
+  {"tag":"#Orientation","q":"What if my team disagrees on direction?","a":"Translate opinions into user stories and compare them against the challenge goals. Use MoSCoW priorities to decide.","m":"Taking disagreements personally instead of viewing them as design signals."},
+  {"tag":"#Orientation","q":"How polished should our prototype be?","a":"Focus on functionality—good enough to learn from. You can polish after validation.","m":"Spending time on visuals before confirming that the idea works."},
+  {"tag":"#Orientation","q":"What does “challenge-based” actually mean?","a":"You start from a real problem, design a response, test it, and reflect. The challenge anchors every step.","m":"Jumping into solutions without grounding them in a real question."},
+  {"tag":"#Orientation","q":"How do I balance my own ideas with my teammates’?","a":"Treat each idea as a hypothesis to test—let data or prototypes guide which one fits best.","m":"Arguing to win instead of experimenting to learn."},
+  {"tag":"#Orientation","q":"I feel anxious about new tools—what should I do first?","a":"Start small: open an example scene, change one parameter, and note what happens. Progress is incremental.","m":"Trying to master everything before experimenting."},
+  {"tag":"#Orientation","q":"How much time should I spend on each module?","a":"Short, focused bursts (1–2 hours) per phase. Timeboxing prevents scope creep.","m":"Working endlessly without deadlines."},
+  {"tag":"#Orientation","q":"What’s the most common reason student projects fail?","a":"Poor communication about roles, timelines, or “done” criteria.","m":"Assuming alignment without explicit check-ins."},
+  {"tag":"#Orientation","q":"How do I know what my “hat” is—researcher, designer, developer, or manager?","a":"Try all briefly. Reflection helps you see where you contribute best.","m":"Locking into one role too early."},
+
+  {"tag":"#Research","q":"How do I turn an idea into a research question?","a":"Start broad (“VR and learning”), then specify population, condition, and measurable outcome.","m":"Keeping questions too vague (“Is VR good?”)."},
+  {"tag":"#Research","q":"What’s the difference between a question and a hypothesis?","a":"The question asks what might happen; the hypothesis predicts what will happen and why.","m":"Writing opinions instead of testable predictions."},
+  {"tag":"#Research","q":"How do I identify independent and dependent variables?","a":"The independent variable (IV) is what you manipulate; the dependent (DV) is what you measure.","m":"Reversing them or mixing too many."},
+  {"tag":"#Research","q":"Why are control variables important?","a":"They keep conditions fair so only your main factor changes.","m":"Ignoring controls like time-on-task or material difficulty."},
+  {"tag":"#Research","q":"How do I make “learning improvement” measurable?","a":"Pick observable metrics—test scores, recall, accuracy, or error rate.","m":"Using undefined concepts (“engagement”) without metrics."},
+  {"tag":"#Research","q":"What if my question changes during the project?","a":"Document the shift and explain why—it’s part of refinement.","m":"Hiding changes instead of showing your reasoning."},
+  {"tag":"#Research","q":"How many variables are too many?","a":"One IV and one or two DVs usually suffice. Each extra adds noise.","m":"Over-complicating experiments with unnecessary data."},
+  {"tag":"#Research","q":"What if I can’t manipulate the independent variable?","a":"Use an observational design; describe patterns but avoid causal claims.","m":"Using “cause” language for correlational results."},
+  {"tag":"#Research","q":"What if my data doesn’t support the hypothesis?","a":"That’s still valuable—it reveals how reality differs from expectation.","m":"Changing data or re-phrasing hypotheses post-hoc."},
+  {"tag":"#Research","q":"How does research feed into the next stages?","a":"Questions and variables become design goals, user stories, and measurable outcomes later.","m":"Treating research as isolated from design."},
+
+  {"tag":"#Design","q":"My idea feels vague—how can I make it concrete?","a":"Write one user story and one measurable outcome. These anchor your design.","m":"Brainstorming endlessly without defining user behavior."},
+  {"tag":"#Design","q":"What makes a design “research-ready”?","a":"It clearly connects participant actions to measurable data.","m":"Building something fun but impossible to analyze."},
+  {"tag":"#Design","q":"How specific should my design plan be?","a":"Be specific about what happens and what’s measured, flexible about visuals or tools.","m":"Over-specifying cosmetic details early."},
+  {"tag":"#Design","q":"Where can I find design inspiration?","a":"Look at VR demos, serious games, or earlier research paradigms. Borrow, adapt, cite.","m":"Copying ideas without connecting to your hypothesis."},
+  {"tag":"#Design","q":"How do I avoid biasing participants?","a":"Pilot test and adjust instructions. Neutral wording and balanced stimuli matter.","m":"Leading participants toward expected results."},
+  {"tag":"#Design","q":"What if I have few assets or little time?","a":"Focus on interaction, not looks. Use placeholders and test core logic.","m":"Spending days on visuals before verifying behavior."},
+  {"tag":"#Design","q":"How do I link design choices to measurement?","a":"For each action, note what data it produces and which hypothesis it supports.","m":"Forgetting to align game events with logged variables."},
+  {"tag":"#Design","q":"Can I reuse an existing experimental setup?","a":"Yes, if you cite it and document any modifications.","m":"Reusing tasks without adapting them to your question."},
+  {"tag":"#Design","q":"When is a design ready for development?","a":"When all user stories and measures are clear and feasible within time.","m":"Handing off unfinished ideas to developers."},
+  {"tag":"#Design","q":"What do researchers often overlook during design?","a":"User perspective and data quality. Clear instructions and consistent interfaces matter as much as hypotheses.","m":"Designing only for aesthetics or novelty."},
+
+  {"tag":"#Development","q":"I can’t code—how do I contribute to development?","a":"Translate user stories into clear requirements and acceptance criteria; that guid
